@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+    <!-- 声明常量（开发模式） -->
+    <constant name="struts.devMode" value="true"></constant>
+    <!-- 声明常量（在Struts的配置文件修改后，自动加载） -->
+    <constant name="struts.configuration.xml.reload" value="true"></constant>
+   	<!-- 临时文件路径 -->
+    <constant name="struts.multipart.saveDir" value="/tempfile" />  
+	<package name="ssh" extends="struts-default">
+		<interceptors>  
+	       <interceptor name="privilege" class="com.sxg.ssh.interceptor.PrivilegeInterceptor"/>  
+	       <interceptor-stack name="myStack">  
+	           	<interceptor-ref name="defaultStack">
+				<param name="fileUpload.maximumSize">4194304</param>
+				<param name="fileUpload.allowedExtensions">
+					.txt,.doc,.jpg,.xls,.xlsx
+				</param>
+			    <param name="fileUpload.allowedTypes">
+					text/plain, application/msword,image/jpeg,
+					application/excel,application/vnd.ms-excel,
+					application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+					application/msexcel
+				</param>  
+			</interceptor-ref> 
+	           <interceptor-ref name="privilege"/>  
+	       </interceptor-stack>  
+	   </interceptors>  
+	   
+	   <default-interceptor-ref name="myStack"></default-interceptor-ref>
+	
+	   <global-results>  
+	       <result name="input">/login.jsp</result>  
+	   </global-results> 
+	</package> 
+</struts>    

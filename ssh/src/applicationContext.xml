@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context-4.1.xsd 
+      http://www.springframework.org/schema/tx 
+      http://www.springframework.org/schema/tx/spring-tx.xsd
+	  http://www.springframework.org/schema/aop 
+	  http://www.springframework.org/schema/aop/spring-aop-4.1.xsd">
+
+	<!-- 扫描 -->
+	<context:component-scan base-package="com.sxg"></context:component-scan>
+
+	<bean
+		class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+
+	<!-- 引入外部属性文件 -->
+	<context:property-placeholder location="classpath:jdbc.properties" />
+
+	<!-- 配置数据源 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driverClass}"></property>
+		<property name="jdbcUrl" value="${jdbc.url}"></property>
+		<property name="user" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+	</bean>
+
+	<!-- 配置SessionFactory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource"> <ref bean="dataSource" /> </property> 
+		<property name="hibernateProperties"> 
+			<props> 
+ 				<!--hibernate.dialect 只是Hibernate使用的数据库方言,就是要用Hibernate连接那种类型的数据库服务器。 -->
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				
+				<!--是否在后台显示Hibernate用到的SQL语句，开发时设置为true。项目部署后可以设置为false，提高运行效率 -->
+				<prop key="hibernate.show_sql">true</prop>
+				
+				<prop key="hibernate.show_format_sql">true</prop> 
+				<prop key="javax.persistence.validation.mode">none</prop> 
+				
+				<!-- 自动生成表 -->
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				
+				<!--jdbc.batch_size是指Hibernate批量插入,删除和更新时每次操作的记录数。BatchSize越大，批量操作的向数据库发送Sql的次数越少， 
+					速度就越快，同样耗用内存就越大 -->
+				<prop key="hibernate.jdbc.batch_size">20</prop>
+	
+				<!--jdbc.fetch_size是指Hibernate每次从数据库中取出并放到JDBC的Statement中的记录条数。 FetchSize设的越大，读数据库的次数越少，速度越快，Fetch 
+					Size越小，读数据库的次数越多，速度越慢 -->
+				<prop key="hibernate.jdbc.fetch_size">50</prop>
+	
+				<!-- 如果改为thread将不能开启事务 -->
+				<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</prop>
+				 
+				<prop key="hibernate.temp.use_jdbc_metadata_default ">false</prop>
+				
+				<prop key="hibernate.autoReconnect">true</prop>
+			</props> 
+		</property>
+
+		<!-- 包级扫描 hibernate实体类 -->
+	    <property name="packagesToScan">  
+		    <list>      
+		        <value>com.sxg.ssh.domain</value>  
+		    </list>  
+	    </property>  
+	</bean>
+
+	<!-- 配置hibernate模板 -->
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate5.HibernateTemplate">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<!-- 事务管理 -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager"  proxy-target-class="true"/>
+</beans>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<constant name="struts.devModel" value="true"></constant> 
+	
+	 <package name="ssh" extends="struts-default">
+ 		<interceptors>  
+	        <interceptor name="privilege" class="com.sxg.ssh.interceptor.PrivilegeInterceptor"/>  
+	        <interceptor-stack name="myStack">  
+             	<interceptor-ref name="defaultStack">
+					<param name="fileUpload.maximumSize">4194304</param>
+					<param name="fileUpload.allowedExtensions">
+						.txt,.doc,.jpg
+					</param>
+					<param name="fileUpload.allowedType">
+						text/plain, application/msword,image/jpeg
+					</param>
+				</interceptor-ref> 
+	            <interceptor-ref name="privilege"/>  
+	        </interceptor-stack>  
+	    </interceptors>  
+	    
+		<default-interceptor-ref name="myStack"></default-interceptor-ref>
+		
+	    <global-results>  
+	        <result name="input">/login.jsp</result>  
+	    </global-results> 
+	 </package> 
+</struts>    

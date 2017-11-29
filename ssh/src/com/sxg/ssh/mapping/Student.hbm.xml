@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-11-7 14:40:01 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.hanqi.entity.User" table="T_USER">
+        <id name="userID" type="int">
+            <column name="USER_ID" />
+            <generator class="native" />
+        </id>
+        <property name="userName" type="java.lang.String">
+            <column name="USER_NAME" length="20" not-null="true" unique="true"/>
+        </property>
+        <property name="birthday" type="java.util.Date">
+            <column name="BIRTHDAY" sql-type="DATE"/>
+        </property>
+        <property name="money" type="java.lang.Double">
+            <column name="MONEY" sql-type="NUMBER" default="0" length="8" scale="2"/>
+        </property>
+         <property name="password" type="java.lang.String">
+        <column name="PASSWORD" length="10"></column>
+        </property> 
+        
+    </class>
+</hibernate-mapping>
