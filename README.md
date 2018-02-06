@@ -23,7 +23,7 @@ SSH
 3. 前台建立如下文件：
     bootstrap、css、front、js、validation、index.jsp（入口文件）、login.jsp
    后台进行如下分层：
-    action（接口层）、dao（数据库访问层）、domain（实体）、dto（对象）、interceptor（过滤层）、</br>
+    action（接口层）、dao（数据库访问层）、domain（实体）、dto（对象）、interceptor（过滤层）、  
     mapping、service（业务层）、utils（工具类）
  4. 进行业务开发
 ```
